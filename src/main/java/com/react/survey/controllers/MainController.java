@@ -39,4 +39,10 @@ public class MainController {
     public Survey createSurvey(@RequestBody SurveyDTO surveyDTO) {
         return surveyService.createSurvey(surveyDTO);
     }
+
+    @PutMapping("/{id}/change")
+    public void changeSurvey(@PathVariable Integer id, @RequestBody Survey survey) {
+        survey.setSurveyId(id);
+        surveyService.save(survey);
+    }
 }

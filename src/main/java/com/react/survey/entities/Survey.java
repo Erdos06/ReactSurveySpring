@@ -36,6 +36,9 @@ public class Survey {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Question> questions = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
     public Survey(String author, String title, String description) {
         this.author = author;
         this.title = title;
