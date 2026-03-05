@@ -4,6 +4,7 @@ import com.react.survey.dtos.CredentialsDTO;
 import com.react.survey.dtos.SignUpDTO;
 import com.react.survey.dtos.UserDTO;
 import com.react.survey.entities.User;
+import com.react.survey.entities.UserRole;
 import com.react.survey.exceptions.AppException;
 import com.react.survey.mappers.UserMapper;
 import com.react.survey.repositories.UserRepository;
@@ -39,13 +40,15 @@ public class UserService {
 
     public UserDTO register(SignUpDTO userDTO){
         Optional<User> optionalUser = userRepository.findByUsername(userDTO.getUsername());
+        Optional<User> optionalUserByEmail = userRepository.findByEmail(userDTO.getEmail());
 
-        if(optionalUser.isPresent()){
+        if(optionalUser.isPresent() || optionalUserByEmail.isPresent()){
             throw new AppException("User already exists", HttpStatus.BAD_REQUEST);
         }
 
         User user = userMapper.signUpToUser(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setRole(UserRole.USER);
 
         User savedUser = userRepository.save(user);
 

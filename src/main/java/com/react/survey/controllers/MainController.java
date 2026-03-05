@@ -15,7 +15,7 @@ public class MainController {
     @Autowired
     private SurveyService surveyService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Survey> index() {
         return surveyService.getAllSurveys();
     }

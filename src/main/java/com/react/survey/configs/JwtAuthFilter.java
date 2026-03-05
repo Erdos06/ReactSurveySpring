@@ -13,20 +13,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private UserAuthProvider userAuthProvider;
+    private final UserAuthProvider userAuthProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
-        if(path.startsWith("/auth") || path.equals("/")) {
+        if(path.startsWith("/auth") || path.trim().equals("/surveys")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (header != null) {
+        if (header != null && header.startsWith("Bearer ")) {
             String[] elements = header.split(" ");
 
             if (elements.length == 2 && elements[0].equalsIgnoreCase("Bearer")) {
