@@ -1,6 +1,6 @@
 package com.react.survey.configs;
 
-import com.react.survey.dtos.ErrorDto;
+import com.react.survey.dtos.user.ErrorDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

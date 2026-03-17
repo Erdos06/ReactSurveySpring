@@ -1,33 +1,44 @@
 package com.react.survey.services;
 
+import com.react.survey.dtos.user.UserDTO;
+import com.react.survey.entities.user.User;
+import com.react.survey.mappers.survey.SurveyMapper;
+import com.react.survey.mappers.user.UserMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.react.survey.dtos.SurveyDTO;
-import com.react.survey.entities.Option;
-import com.react.survey.entities.Question;
-import com.react.survey.entities.Survey;
+import com.react.survey.dtos.survey.SurveyDTO;
+import com.react.survey.entities.survey.Option;
+import com.react.survey.entities.survey.Question;
+import com.react.survey.entities.survey.Survey;
 import com.react.survey.repositories.SurveyRepository;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SurveyService {
-    SurveyRepository surveyRepository;
-    @Autowired
-    public void setSurveyRepository(SurveyRepository surveyRepository) {
-        this.surveyRepository = surveyRepository;
+    private final SurveyRepository surveyRepository;
+    private final SurveyMapper surveyMapper;
+    private final UserMapper userMapper;
+
+    public List<SurveyDTO> getAllSurveys(){
+        List<Survey> surveys = surveyRepository.findAll();
+
+        return surveys.stream()
+                .map(surveyMapper::toSurveyDto)
+                .toList();
     }
 
-    public List<Survey> getAllSurveys(){
-        return surveyRepository.findAll();
-    }
-
-    public Survey getSurveyById(long id){
+    public Survey getSurveyById(int id){
         return surveyRepository.findById(id).get();
     }
 
@@ -35,38 +46,28 @@ public class SurveyService {
         surveyRepository.save(survey);
     }
 
-    public void deleteSurvey(Long id){
+    public void deleteSurvey(int id){
         surveyRepository.deleteById(id);
     }
 
-    public Survey createSurvey(SurveyDTO dto){
-        Survey survey = new Survey();
-        survey.setTitle(dto.getTitle());
-        survey.setDescription(dto.getDescription());
-        survey.setAuthor(dto.getAuthor());
-        survey.setCreatedAt(Date.from(Instant.now()));
+    public void changeSurvey(int id, SurveyDTO surveyDto){
+        Survey survey = surveyRepository.findById(id).orElseThrow(() -> new RuntimeException("Survey not found"));
+        surveyMapper.updateSurveyFromDto(surveyDto, survey);
+        surveyRepository.save(survey);
+    }
 
-        if(dto.getQuestions() != null) {
-            survey.setQuestions(
-                    dto.getQuestions().stream().map(questionDTO -> {
-                        Question question = new Question();
-                        question.setText(questionDTO.getText());
-                        question.setType(questionDTO.getType());
-                        question.setRequired(questionDTO.isRequired());
-                        if(questionDTO.getOptions() != null) {
-                            question.setOptions(questionDTO.getOptions().stream().map(optionDTO ->  {
-                                System.out.println(optionDTO);
-                                Option option = new Option();
-                                option.setOptionText(optionDTO.getOptionText());
-                                return option;
-                            }).toList());
-                        }
+    public SurveyDTO createSurvey(SurveyDTO dto){
+        Survey survey = surveyMapper.toSurvey(dto);
+        User user = getCurrentUser();
+        survey.setAuthor(user.getUsername());
+        surveyRepository.save(survey);
+        return surveyMapper.toSurveyDto(survey);
+    }
 
-                        return question;
-                    }).collect(Collectors.toList())
-            );
-        }
-
-        return surveyRepository.save(survey);
+    private User getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDTO userDto = (UserDTO) authentication.getPrincipal();
+        User user = userMapper.toUser(userDto);
+        return user;
     }
 }

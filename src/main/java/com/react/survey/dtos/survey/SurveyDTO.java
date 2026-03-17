@@ -1,4 +1,4 @@
-package com.react.survey.dtos;
+package com.react.survey.dtos.survey;
 
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class SurveyDTO {
+    private int surveyId;
     private String title;
     private String author;
     private String description;

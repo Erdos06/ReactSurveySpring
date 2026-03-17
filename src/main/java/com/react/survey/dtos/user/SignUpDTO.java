@@ -1,4 +1,4 @@
-package com.react.survey.dtos;
+package com.react.survey.dtos.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

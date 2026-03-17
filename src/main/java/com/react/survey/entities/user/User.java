@@ -1,5 +1,6 @@
-package com.react.survey.entities;
+package com.react.survey.entities.user;
 
+import com.react.survey.entities.survey.Survey;
 import jakarta.persistence.*;
 import lombok.*;
 

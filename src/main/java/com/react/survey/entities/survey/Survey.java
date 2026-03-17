@@ -1,5 +1,6 @@
-package com.react.survey.entities;
+package com.react.survey.entities.survey;
 
+import com.react.survey.entities.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +31,15 @@ public class Survey {
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
+    @PrePersist
+    public void prePersist() {
+        createdAt = Date.from(Instant.now());
+    }
+
     @Column(name = "description", nullable = false, length = 40)
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Question> questions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

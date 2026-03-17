@@ -1,12 +1,12 @@
 package com.react.survey.services;
 
-import com.react.survey.dtos.CredentialsDTO;
-import com.react.survey.dtos.SignUpDTO;
-import com.react.survey.dtos.UserDTO;
-import com.react.survey.entities.User;
-import com.react.survey.entities.UserRole;
+import com.react.survey.dtos.user.CredentialsDTO;
+import com.react.survey.dtos.user.SignUpDTO;
+import com.react.survey.dtos.user.UserDTO;
+import com.react.survey.entities.user.User;
+import com.react.survey.entities.user.UserRole;
 import com.react.survey.exceptions.AppException;
-import com.react.survey.mappers.UserMapper;
+import com.react.survey.mappers.user.UserMapper;
 import com.react.survey.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

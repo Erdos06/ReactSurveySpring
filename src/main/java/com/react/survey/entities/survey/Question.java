@@ -1,4 +1,4 @@
-package com.react.survey.entities;
+package com.react.survey.entities.survey;
 
 import jakarta.persistence.*;
 import lombok.Getter;

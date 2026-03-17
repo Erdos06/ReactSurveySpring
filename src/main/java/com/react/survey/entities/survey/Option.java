@@ -1,7 +1,6 @@
-package com.react.survey.entities;
+package com.react.survey.entities.survey;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

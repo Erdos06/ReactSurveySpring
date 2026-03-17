@@ -3,6 +3,7 @@ package com.react.survey.configs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,8 +34,10 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthFilter(userAuthProvider), BasicAuthenticationFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(HttpMethod.GET, "/check/token").authenticated()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/surveys").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/surveys").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/surveys").authenticated()
                         .requestMatchers("/surveys/**").authenticated()
                         .anyRequest().authenticated()
                 ).build();
