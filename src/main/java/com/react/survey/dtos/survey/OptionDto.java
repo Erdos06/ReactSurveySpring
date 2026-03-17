@@ -7,7 +7,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class OptionDTO {
+public class OptionDto {
     private int optionId;
     private String optionText;
 }

@@ -1,4 +1,4 @@
-package com.react.survey.repositories;
+package com.react.survey.repositories.user;
 
 import com.react.survey.entities.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

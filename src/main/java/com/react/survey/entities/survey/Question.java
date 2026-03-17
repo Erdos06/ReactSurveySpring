@@ -28,6 +28,10 @@ public class Question {
     @Column(name = "required")
     private boolean required;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "survey_id")
+    private Survey survey;
+
     @OneToMany(cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
     private List<Option> options = new ArrayList<>();
 }
