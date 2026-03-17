@@ -1,15 +1,17 @@
 package com.react.survey.services;
 
-import com.react.survey.dtos.user.CredentialsDTO;
-import com.react.survey.dtos.user.SignUpDTO;
-import com.react.survey.dtos.user.UserDTO;
+import com.react.survey.dtos.user.CredentialsDto;
+import com.react.survey.dtos.user.SignUpDto;
+import com.react.survey.dtos.user.UserDto;
 import com.react.survey.entities.user.User;
 import com.react.survey.entities.user.UserRole;
 import com.react.survey.exceptions.AppException;
 import com.react.survey.mappers.user.UserMapper;
-import com.react.survey.repositories.UserRepository;
+import com.react.survey.repositories.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +24,13 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDTO findByLogin(String login) {
+    public UserDto findByLogin(String login) {
         User user = userRepository.findByUsername(login).orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
         return userMapper.toUserDto(user);
     }
 
-    public UserDTO login(CredentialsDTO credentialsDTO){
+    public UserDto login(CredentialsDto credentialsDTO){
         User user = userRepository.findByUsername(credentialsDTO.getUsername()).orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
         if (passwordEncoder.matches(credentialsDTO.getPassword(), user.getPassword())){
@@ -38,7 +40,7 @@ public class UserService {
         throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
     }
 
-    public UserDTO register(SignUpDTO userDTO){
+    public UserDto register(SignUpDto userDTO){
         Optional<User> optionalUser = userRepository.findByUsername(userDTO.getUsername());
         Optional<User> optionalUserByEmail = userRepository.findByEmail(userDTO.getEmail());
 
@@ -54,6 +56,13 @@ public class UserService {
 
         return userMapper.toUserDto(savedUser);
 
+    }
+
+    public User getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDto userDto = (UserDto) authentication.getPrincipal();
+        User user = userMapper.toUser(userDto);
+        return user;
     }
 
 }

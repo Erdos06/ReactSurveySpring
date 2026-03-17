@@ -19,6 +19,10 @@ public class Option {
     @Column(name = "option_text", nullable = false,  length = 20)
     private String optionText;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private Question question;
+
     @Column(name = "count", nullable = false)
     private int count = 0;
 

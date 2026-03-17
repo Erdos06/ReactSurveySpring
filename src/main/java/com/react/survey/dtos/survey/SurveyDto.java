@@ -9,10 +9,10 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-public class SurveyDTO {
+public class SurveyDto {
     private int surveyId;
     private String title;
     private String author;
     private String description;
-    private List<QuestionDTO> questions;
+    private List<QuestionDto> questions;
 }

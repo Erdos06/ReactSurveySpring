@@ -9,10 +9,10 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-public class QuestionDTO {
+public class QuestionDto {
     private int questionId;
     private String text;
     private String type;
     private boolean required;
-    private List<OptionDTO> options;
+    private List<OptionDto> options;
 }

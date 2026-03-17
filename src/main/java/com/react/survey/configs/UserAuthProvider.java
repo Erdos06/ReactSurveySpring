@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.react.survey.dtos.user.UserDTO;
+import com.react.survey.dtos.user.UserDto;
 import com.react.survey.services.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class UserAuthProvider {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
         DecodedJWT decoded = verifier.verify(token);
 
-        UserDTO userDto = userService.findByLogin(decoded.getIssuer());
+        UserDto userDto = userService.findByLogin(decoded.getIssuer());
 
         return new UsernamePasswordAuthenticationToken(userDto, null, Collections.emptyList());
     }
