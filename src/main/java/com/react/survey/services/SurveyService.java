@@ -3,10 +3,14 @@ package com.react.survey.services;
 import com.react.survey.dtos.answer.AnswerDto;
 import com.react.survey.dtos.survey.SurveyDto;
 import com.react.survey.entities.answer.UserSurvey;
+import com.react.survey.entities.answer.userAnswer.UserAnswer;
+import com.react.survey.entities.answer.userAnswer.UserAnswerTextArea;
 import com.react.survey.entities.user.User;
+import com.react.survey.mappers.survey.QuestionMapper;
 import com.react.survey.mappers.survey.SurveyMapper;
 import com.react.survey.repositories.answer.UserSurveyRepository;
 import com.react.survey.repositories.survey.QuestionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,9 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SurveyService {
     private final SurveyRepository surveyRepository;
-    private final QuestionRepository questionRepository;
-    private final UserSurveyRepository userSurveyRepository;
-
     private final UserService userService;
     private final SurveyMapper surveyMapper;
 
@@ -58,24 +59,5 @@ public class SurveyService {
         survey.setAuthor(user.getUsername());
         surveyRepository.save(survey);
         return surveyMapper.toSurveyDto(survey);
-    }
-
-    public UserSurvey startSurvey(int surveyId){
-        UserSurvey userSurvey = new UserSurvey();
-        userSurvey.setUser(userService.getCurrentUser());
-        userSurvey.setSurvey(surveyRepository.findById(surveyId).get());
-        userSurvey.setLastQuestion(questionRepository.findById(surveyRepository.findFirstQuestionIdBySurveyId(surveyId).get()).get());
-        return userSurveyRepository.save(userSurvey);
-    }
-
-    public boolean surveyContainsQuestion(int surveyId, AnswerDto answerDto){
-        return surveyRepository.questionExistsInSurvey(surveyId, answerDto.getQuestionDto().getQuestionId());
-    }
-    public boolean questionContainsOption(AnswerDto answerDto){
-        return surveyRepository.optionExistsInQuestion(answerDto.getQuestionDto().getQuestionId(), answerDto.getOptionDto().getOptionId());
-    }
-
-    public void answerSurvey(int surveyId, AnswerDto answerDto){
-
     }
 }
