@@ -4,10 +4,14 @@ import com.react.survey.entities.survey.Question;
 import com.react.survey.entities.survey.Survey;
 import com.react.survey.entities.user.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 public class UserAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

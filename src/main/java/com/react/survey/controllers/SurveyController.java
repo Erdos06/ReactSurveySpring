@@ -1,9 +1,12 @@
 package com.react.survey.controllers;
 
 import com.react.survey.dtos.answer.AnswerDto;
+import com.react.survey.dtos.answer.UserSurveyDto;
 import com.react.survey.dtos.survey.SurveyDto;
 import com.react.survey.entities.answer.UserSurvey;
+import com.react.survey.entities.answer.userAnswer.UserAnswer;
 import com.react.survey.mappers.survey.SurveyMapper;
+import com.react.survey.services.UserAnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.react.survey.services.SurveyService;
@@ -16,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SurveyController {
     private final SurveyService surveyService;
+    private final UserAnswerService userAnswerService;
     private final SurveyMapper surveyMapper;
 
     @GetMapping("")
@@ -49,12 +53,12 @@ public class SurveyController {
     }
 
     @PostMapping("/{surveyId}/start")
-    public UserSurvey startSurvey(@PathVariable int surveyId) {
-        return surveyService.startSurvey(surveyId);
+    public UserSurveyDto startSurvey(@PathVariable int surveyId) {
+        return userAnswerService.startSurvey(surveyId);
     }
 
     @PostMapping("/{surveyId}/answer")
     public void answerSurvey(@PathVariable int surveyId, @RequestBody AnswerDto answerDto) {
-
+        userAnswerService.answerSurvey(surveyId, answerDto);
     }
 }
